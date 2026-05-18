@@ -1,6 +1,6 @@
 ## Repo Init ##
 ```bash
-repo init -u https://github.com/mt6983-development/kernel_manifest.git
+repo init -u https://github.com/mt6983-development/kernel_manifest.git --depth=1
 ```
 ## Sync Source ##
 ```bash

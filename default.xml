@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<manifest>
+  <remote name="aosp" 
+          fetch="https://android.googlesource.com/" />
+  <remote  name="github"
+    fetch="https://github.com/mt6983-development" />
+
+  <default revision="master-kernel-build-2021" remote="aosp" sync-j="4" />
+
+  <superproject name="kernel/superproject" remote="aosp" revision="common-android12-5.10" />
+
+  <project path="build" name="kernel/build" />
+  <project path="kernel/tests" name="kernel/tests" />
+  <project path="kernel/configs" name="kernel/configs" />
+  <project path="prebuilts/build-tools" name="platform/prebuilts/build-tools" clone-depth="1" />
+  <project path="prebuilts/kernel-build-tools" name="kernel/prebuilts/build-tools" clone-depth="1" />
+  <project path="prebuilts-master/clang/host/linux-x86" name="platform/prebuilts/clang/host/linux-x86" clone-depth="1" remote="aosp" />
+  <project path="prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8" name="platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8" clone-depth="1" remote="aosp" />
+
+  <project path="kernel-5.10" name="android_kernel_5.10_oneplus_mt6983" remote="github" revision="lineage-23.2" >
+    <linkfile dest="build.config" src="build.config.oplus6895" />
+  </project>
+
+  <project path="." name="android_kernel_modules_oneplus_mt6983" remote="github" revision="lineage-23.2" />
+
+</manifest>

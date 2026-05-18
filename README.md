@@ -10,3 +10,7 @@ repo sync --force-sync --no-clone-bundle --current-branch --no-tags -j$(nproc --
 ```bash
 LTO=thin build/build.sh -j$(nproc --all)
 ```
+## To copy those kernel output can use this script ##
+```bash
+wget https://raw.githubusercontent.com/mt6983-development/kernel_manifest/main/copy_modules.sh
+```

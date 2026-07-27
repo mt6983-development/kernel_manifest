@@ -2,12 +2,12 @@
 set -e
 
 echo "================================================="
-echo " Kernel Modules & Image.gz Custom Copy Script"
+echo " Kernel Modules & Image.gz / DTB Custom Copy Script"
 echo "================================================="
 echo ""
 
 # 1. Ask for the source directory (This MUST exist)
-read -rp "Enter source directory (where new compiled modules/Image.gz are): " SRC
+read -rp "Enter source directory (where new compiled modules/Image.gz/dtb are): " SRC
 if [[ ! -d "$SRC" ]]; then
   echo "Error: Source directory '$SRC' does not exist."
   exit 1
@@ -20,7 +20,14 @@ if [[ ! -d "$IMG_DST_DIR" ]]; then
   mkdir -p "$IMG_DST_DIR"
 fi
 
-# 3. Ask for the Modules destination directory (Create if it doesn't exist)
+# 3. Ask for the mt6983.dtb destination directory (Create if it doesn't exist)
+read -rp "Enter destination directory for mt6983.dtb: " DTB_DST_DIR
+if [[ ! -d "$DTB_DST_DIR" ]]; then
+  echo "[*] Directory '$DTB_DST_DIR' does not exist. Creating it automatically..."
+  mkdir -p "$DTB_DST_DIR"
+fi
+
+# 4. Ask for the Modules destination directory (Create if it doesn't exist)
 read -rp "Enter destination directory for .ko modules: " MOD_DST_DIR
 if [[ ! -d "$MOD_DST_DIR" ]]; then
   echo "[*] Directory '$MOD_DST_DIR' does not exist. Creating it automatically..."
@@ -38,6 +45,19 @@ if [[ -n "$IMG_SRC" ]]; then
     echo " -> SUCCESS: Copied Image.gz to $IMG_DST_DIR/"
 else
     echo " -> SKIP: Image.gz not found in source directory '$SRC'."
+fi
+
+echo ""
+echo "[*] Processing mt6983.dtb..."
+# Find mt6983.dtb in the source directory
+DTB_SRC=$(find "$SRC" -type f -name "mt6983.dtb" | head -n 1)
+
+if [[ -n "$DTB_SRC" ]]; then
+    # Copy/replace mt6983.dtb to the specified destination directory
+    cp -a "$DTB_SRC" "$DTB_DST_DIR/"
+    echo " -> SUCCESS: Copied mt6983.dtb to $DTB_DST_DIR/"
+else
+    echo " -> SKIP: mt6983.dtb not found in source directory '$SRC'."
 fi
 
 echo ""
@@ -67,14 +87,14 @@ while IFS= read -r src_ko; do
     target_path="${dst_map[$name]}"
     cp -a "$src_ko" "$target_path"
     echo " -> REPLACED: $name at $target_path"
-    # FIXED: Safe arithmetic evaluation for set -e
+    # Safe arithmetic evaluation for set -e
     replaced_count=$((replaced_count + 1))
   else
     # Module doesn't exist in the destination, so copy it directly into MOD_DST_DIR
     target_path="$MOD_DST_DIR/$name"
     cp -a "$src_ko" "$target_path"
     echo " -> COPIED (New): $name to $target_path"
-    # FIXED: Safe arithmetic evaluation for set -e
+    # Safe arithmetic evaluation for set -e
     new_count=$((new_count + 1))
   fi
 done < <(find "$SRC" -name "*.ko" 2>/dev/null)
@@ -82,6 +102,8 @@ done < <(find "$SRC" -name "*.ko" 2>/dev/null)
 echo ""
 echo "================================================="
 echo "Done!"
+echo "- Image.gz: $( [[ -n "$IMG_SRC" ]] && echo "copied" || echo "not found" )"
+echo "- mt6983.dtb: $( [[ -n "$DTB_SRC" ]] && echo "copied" || echo "not found" )"
 echo "- Modules Replaced: $replaced_count"
 echo "- New Modules Copied: $new_count"
 echo "================================================="

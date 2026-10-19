@@ -61,6 +61,19 @@ else
 fi
 
 echo ""
+echo "[*] Processing oplus6983_22823.dtbo..."
+# Find oplus6983_22823.dtbo in the source directory
+DTBO_SRC=$(find "$SRC" -type f -name "oplus6983_22823.dtbo" | head -n 1)
+
+if [[ -n "$DTBO_SRC" ]]; then
+    # Copy/replace oplus6983_22823.dtbo to the specified destination directory
+    cp -a "$DTBO_SRC" "$DTB_DST_DIR/"
+    echo " -> SUCCESS: Copied oplus6983_22823.dtbo to $DTB_DST_DIR/"
+else
+    echo " -> SKIP: oplus6983_22823.dtbo not found in source directory '$SRC'."
+fi
+
+echo ""
 echo "[*] Syncing & Copying .ko Modules to $MOD_DST_DIR..."
 declare -A dst_map
 
@@ -104,6 +117,7 @@ echo "================================================="
 echo "Done!"
 echo "- Image.gz: $( [[ -n "$IMG_SRC" ]] && echo "copied" || echo "not found" )"
 echo "- mt6983.dtb: $( [[ -n "$DTB_SRC" ]] && echo "copied" || echo "not found" )"
+echo "- oplus6983_22823.dtbo: $( [[ -n "$DTBO_SRC" ]] && echo "copied" || echo "not found" )"
 echo "- Modules Replaced: $replaced_count"
 echo "- New Modules Copied: $new_count"
 echo "================================================="

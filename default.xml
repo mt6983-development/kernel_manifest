@@ -7,7 +7,7 @@
 
   <default revision="master-kernel-build-2021" remote="aosp" sync-j="4" />
 
-  <superproject name="kernel/superproject" remote="aosp" revision="common-android12-5.10" />
+  <superproject name="kernel/superproject" remote="aosp" revision="common-android14-6.1-2026-09" />
 
   <project path="build" name="kernel/build" />
   <project path="kernel/tests" name="kernel/tests" />
@@ -17,10 +17,10 @@
   <project path="prebuilts-master/clang/host/linux-x86" name="platform/prebuilts/clang/host/linux-x86" clone-depth="1" remote="aosp" />
   <project path="prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8" name="platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8" clone-depth="1" remote="aosp" />
 
-  <project path="kernel-5.10" name="android_kernel_oneplus_mt6983" remote="github" revision="lineage-24.0" >
+  <project path="kernel-6.1" name="android_kernel_oneplus_mt6983" remote="github" revision="port-6.1.176" >
     <linkfile dest="build.config" src="build.config.oplus6983" />
   </project>
 
-  <project path="." name="android_kernel_modules_oneplus_mt6983" remote="github" revision="lineage-24.0" />
+  <project path="." name="android_kernel_modules_oneplus_mt6983" remote="github" revision="port-6.1.176" />
 
 </manifest>

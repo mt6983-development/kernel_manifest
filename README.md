@@ -27,23 +27,25 @@ repo sync -c --force-sync --optimized-fetch --no-tags --no-clone-bundle --prune 
 
 ### Option A: Kleaf / Bazel Build (Recommended)
 
+> **Note:** In Kleaf, distribution targets (`*_dist`) are executable installer rules. Use `tools/bazel run` to build and populate the `out/.../dist/` directory. Running `tools/bazel build` only compiles artifacts into `bazel-bin/` without copying them to `out/`.
+
 1. **OnePlus Nord 3 (vitamin) Release Distribution:**
    Builds the kernel Image, SoC base DTB (`mt6983.dtb`), board overlay DTBO (`oplus6983_22823.dtbo`), and kernel modules:
    ```bash
-   tools/bazel build --config=fast //common:vitamin_dist
+   tools/bazel run --config=fast //common:vitamin_dist
    ```
    Artifacts are output to `out/vitamin/dist/`.
 
 2. **OnePlus Nord 3 (vitamin) Debug Diagnostic Distribution:**
    Builds with verbose earlycon, ftrace, boottime tracing, and ramoops:
    ```bash
-   tools/bazel build --config=fast //common:vitamin_debug_dist
+   tools/bazel run --config=fast //common:vitamin_debug_dist
    ```
    Artifacts are output to `out/vitamin_debug/dist/`.
 
 3. **Generic Kernel Image (GKI) Only:**
    ```bash
-   tools/bazel build --config=fast //common:kernel_aarch64_dist
+   tools/bazel run --config=fast //common:kernel_aarch64_dist
    ```
    Artifacts are output to `out/kernel_aarch64/dist/`.
 

@@ -1,26 +1,75 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <manifest>
-  <remote name="aosp" 
+  <remote name="aosp"
           fetch="https://android.googlesource.com/" />
-  <remote  name="github"
-    fetch="https://github.com/mt6983-development" />
+  <remote name="github"
+          fetch="https://github.com/mt6983-development" />
 
-  <default revision="master-kernel-build-2021" remote="aosp" sync-j="4" />
+  <default revision="main-kernel-2026" remote="aosp" sync-j="4" />
 
-  <superproject name="kernel/superproject" remote="aosp" revision="common-android12-5.10" />
+  <superproject name="kernel/superproject" remote="aosp" revision="common-android17-6.18" />
 
-  <project path="build" name="kernel/build" />
-  <project path="kernel/tests" name="kernel/tests" />
-  <project path="kernel/configs" name="kernel/configs" />
-  <project path="prebuilts/build-tools" name="platform/prebuilts/build-tools" clone-depth="1" />
-  <project path="prebuilts/kernel-build-tools" name="kernel/prebuilts/build-tools" clone-depth="1" />
-  <project path="prebuilts-master/clang/host/linux-x86" name="platform/prebuilts/clang/host/linux-x86" clone-depth="1" remote="aosp" />
-  <project path="prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8" name="platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8" clone-depth="1" remote="aosp" />
-
-  <project path="kernel-5.10" name="android_kernel_oneplus_mt6983" remote="github" revision="lineage-24.0" >
-    <linkfile dest="build.config" src="build.config.oplus6983" />
+  <!-- Kleaf Bazel Build System -->
+  <project path="build/kernel" name="kernel/build" groups="ddk">
+    <linkfile src="kleaf/bazel.sh" dest="tools/bazel" />
+    <linkfile src="kleaf/bzlmod/bazel.MODULE.bazel" dest="MODULE.bazel" />
   </project>
 
-  <project path="." name="android_kernel_modules_oneplus_mt6983" remote="github" revision="lineage-24.0" />
+  <!-- OnePlus Nord 3 (vitamin, MT6983) Kernel Source (ACK 6.18) -->
+  <project path="common" name="android_kernel_oneplus_mt6983" remote="github" revision="test-6.18">
+    <linkfile dest="kernel-5.10" src="." />
+    <linkfile dest="build.config" src="build.config.vitamin" />
+  </project>
 
+  <!-- OnePlus Nord 3 Vendor Modules -->
+  <project path="." name="android_kernel_modules_oneplus_mt6983" remote="github" revision="test-6.18" />
+
+  <!-- Common Kernel Modules -->
+  <project path="common-modules/wonder" name="kernel/common-modules/wonder" revision="android17-6.18" />
+  <project path="common-modules/trusty" name="kernel/common-modules/trusty" />
+  <project path="common-modules/virtio-media" name="platform/external/virtio-media" />
+  <project path="common-modules/virtual-device" name="kernel/common-modules/virtual-device" revision="android17-6.18" />
+
+  <!-- Prebuilt Toolchains & Build Tools -->
+  <project path="prebuilts/clang/host/linux-x86" name="platform/prebuilts/clang/host/linux-x86" clone-depth="1" groups="ddk" />
+  <project path="prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8" name="platform/prebuilts/gcc/linux-x86/host/x86_64-linux-glibc2.17-4.8" clone-depth="1" groups="ddk" />
+  <project path="prebuilts/build-tools" name="platform/prebuilts/build-tools" clone-depth="1" groups="ddk" />
+  <project path="prebuilts/clang-tools" name="platform/prebuilts/clang-tools" clone-depth="1" groups="ddk" />
+  <project path="prebuilts/kernel-build-tools" name="kernel/prebuilts/build-tools" clone-depth="1" groups="ddk" />
+  <project path="prebuilts/rust-toolchain/linux-x86" name="platform/prebuilts/rust-toolchain/linux-x86" clone-depth="1" groups="ddk" />
+  <project path="prebuilts/ndk-r27" name="toolchain/prebuilts/ndk/r27" clone-depth="1" groups="ddk" />
+  <project path="prebuilts/jdk/jdk11" name="platform/prebuilts/jdk/jdk11" clone-depth="1" />
+
+  <!-- External Host Libraries -->
+  <project path="external/libcap-ng" name="platform/external/libcap-ng" />
+  <project path="external/libcap" name="platform/external/libcap" />
+
+  <!-- Bzlmod Dependencies for Bazel -->
+  <project path="external/bazel-contrib-bazel_features" name="platform/external/bazel-contrib-bazel_features" groups="ddk-external" />
+  <project path="external/bazel-contrib-rules_devicetree" name="platform/external/bazel-contrib-rules_devicetree" groups="ddk-external" />
+  <project path="external/bazel-contrib-supply-chain" name="platform/external/bazel-contrib-supply-chain" groups="ddk-external" />
+  <project path="external/bazel-skylib" name="platform/external/bazel-skylib" groups="ddk-external" />
+  <project path="external/bazelbuild-bazel-central-registry" name="platform/external/bazelbuild-bazel-central-registry" groups="ddk-external" />
+  <project path="external/bazelbuild-platforms" name="platform/external/bazelbuild-platforms" groups="ddk-external" />
+  <project path="external/bazelbuild-rules_cc" name="platform/external/bazelbuild-rules_cc" groups="ddk-external" />
+  <project path="external/bazelbuild-rules_license" name="platform/external/bazelbuild-rules_license" groups="ddk-external" />
+  <project path="external/bazelbuild-rules_pkg" name="platform/external/bazelbuild-rules_pkg" groups="ddk-external" />
+  <project path="external/bazelbuild-rules_python" name="platform/external/bazelbuild-rules_python" groups="ddk-external" />
+  <project path="external/bazelbuild-rules_rust" name="platform/external/bazelbuild-rules_rust" groups="ddk-external" />
+  <project path="external/bazelbuild-rules_shell" name="platform/external/bazelbuild-rules_shell" groups="ddk-external" />
+  <project path="external/python/absl-py" name="platform/external/python/absl-py" groups="ddk-external" />
+
+  <!-- Local Repository Dependencies -->
+  <project path="external/argp-standalone" name="platform/external/argp-standalone" groups="ddk" />
+  <project path="external/avb" name="platform/external/avb" groups="ddk" />
+  <project path="external/dtc" name="platform/external/dtc" groups="ddk" />
+  <project path="external/dwarves" name="platform/external/dwarves" groups="ddk" />
+  <project path="external/kmod" name="platform/external/kmod" groups="ddk" />
+  <project path="external/lz4" name="platform/external/lz4" groups="ddk" />
+  <project path="external/obstack" name="platform/external/obstack" groups="ddk" />
+  <project path="external/pigz" name="platform/external/pigz" groups="ddk" />
+  <project path="external/toybox" name="platform/external/toybox" groups="ddk" />
+  <project path="external/zlib" name="platform/external/zlib" groups="ddk" />
+  <project path="external/zopfli" name="platform/external/zopfli" groups="ddk" />
+  <project path="external/zstd" name="platform/external/zstd" groups="ddk" />
 </manifest>
